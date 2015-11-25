@@ -1,11 +1,10 @@
-# µ lib
-mu - Mini Underscore library
+# object-iterators
 
-Just the object iterators, similar in name and function to those found in underscore.js.
+The object iterators, similar in name and function to those found in underscore.js.
 
 ## API documentation
 
-Detailed API docs can be found [here](http://joneit.github.io/mu/global.html).
+Detailed API docs can be found [here](http://joneit.github.io/object-iterators/global.html).
 
 Or see the Underscore docs:
 

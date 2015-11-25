@@ -1,11 +1,11 @@
 {
   "name": "object-iterators",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "index.js",
   "description": "Mini Underscore - object iterators",
   "repository": {
     "type": "git",
-    "url": "git://github.com/joneit/mu.git"
+    "url": "git://github.com/joneit/object-iterators.git"
   },
   "scripts": {
     "test": "gulp test"

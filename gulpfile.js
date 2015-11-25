@@ -61,7 +61,7 @@ function doc(cb) {
 }
 
 function rootify() {
-    return gulp.src(js.dir + 'mu.js')
+    return gulp.src(js.dir + 'object-iterators.js')
         .pipe($$.rename('index.js'))
         .pipe(gulp.dest(destDir));
 }

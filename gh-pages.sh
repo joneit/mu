@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 org="joneit"
-module="mu"
+module="object-iterators"
 
 # set variable repo to current directory name (without path)
 repo=${PWD##*/}
