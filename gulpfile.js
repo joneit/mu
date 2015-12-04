@@ -68,7 +68,14 @@ function doc(cb) {
 
 function enclose() {
     return gulp.src(srcDir + 'index.js')
-        .pipe($$.replace('module.exports', 'window._'))
+        .pipe($$.replace(
+            '\'use strict\';',
+            '\'use strict\';\n\nwindow._ = (function(){'
+        ))
+        .pipe($$.replace(
+            'module.exports = Wrapper;',
+            'return Wrapper;\n\n})();'
+        ))
 
         .pipe($$.rename(name + '.js'))
         .pipe(gulp.dest(buildDir))
