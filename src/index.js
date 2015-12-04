@@ -13,7 +13,7 @@
 
 /**
  * @constructor
- * @summary Wrap an object for one method.
+ * @summary Wrap an object for one method call.
  * @Desc Note that the `new` keyword is not necessary.
  * @param {object|null|undefined} object - `null` or `undefined` is treated as an empty plain object.
  * @return {Wrapper} The wrapped object.
@@ -31,7 +31,7 @@ function Wrapper(object) {
 
 /**
  * @name Wrapper.chain
- * @summary Wrap an object for a chain of methods.
+ * @summary Wrap an object for a chain of method calls.
  * @Desc Calls the constructor `Wrapper()` and modifies the wrapper for chaining.
  * @param {object} object
  * @return {Wrapper} The wrapped object.

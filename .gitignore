@@ -1,5 +1,6 @@
 .DS_Store
-.idea
-node_modules
-doc
-index.js
+/.idea
+/build/object-iterators.js
+/build/object-iterators.min.js
+/node_modules
+/doc

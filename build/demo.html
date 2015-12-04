@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>object-iterators demo</title>
+    <style>
+        body { font-family: arial }
+        li.true::before { color: green; content: '\2713\A0' }
+        li.false::before { color: red; content: '\2717\A0' }
+    </style>
+    <script src="object-iterators.js"></script>
+    <script>
+window.onload = function() {
+
+    var obj = {
+        id: 30,
+        name: 'Jack',
+        gender: 'male'
+    };
+
+    var wrapped = _(obj);
+    it('returns wrapped object', wrapped.each(function(value, key) {
+        it(key, value, key === 'id' ? 30 : key === 'name' ? 'Jack' : key === 'gender' ? 'male' : 'undefined');
+    }), wrapped);
+
+    it('reduces correctly', wrapped.reduce(function(memo, value, key) { return memo + (parseInt(value) || 0); }, 100), 130);
+
+    it('finds included member', wrapped.find(function(value, key) { return value === 'Jack'; }), 'Jack');
+
+    it('does not find excluded member', wrapped.find(function(value, key) { return value === 'Jill'; }), undefined);
+
+    function it(label, value, expectedValue) {
+        var li = document.createElement('li');
+        li.className = (value === expectedValue);
+        li.innerHTML = label;
+        document.getElementsByTagName('ol')[0].appendChild(li);
+    }
+
+}
+    </script>
+</head>
+<body>
+    <ol></ol>
+</body>
+</html>
