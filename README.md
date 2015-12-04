@@ -6,9 +6,21 @@ The object iterators, similar in function to those found in underscore.js.
 
 ## Synopsis
 
-```javascript
-var _ = require('object-iterators');
+Node.js:
 
+```javascript
+var Base = require('object-iterators').Base;
+```
+
+Browser:
+
+```html
+<script src="http://joneit.github.io/object-iterators/object-iterators.min.js"></script>
+```
+
+Usage example:
+
+```javascript
 var obj = {
     id: 30,
     name: 'Jack',
@@ -29,12 +41,16 @@ print(_(obj).find(function(value, key) { return value === 'Jack'; }));
 print(_(obj).find(function(value, key) { return value === 'Jill'; }));
 // undefined
 
-function print() { console.log.apply(console, ['//'].concat(Array.prototype.slice.call(arguments))); }
+function print() { console.log('// ' + Array.prototype.slice.call(arguments).join(' ')); }
 ```
 
 ## API documentation
 
 Detailed API docs can be found [here](http://joneit.github.io/object-iterators/Wrapper.html).
+
+### Demo
+
+A demo can be found [here](http://joneit.github.io/object-iterators/demo.html).
 
 Or see the Underscore docs:
 
@@ -51,7 +67,7 @@ Just keep in mind that these are for objects only (not arrays).
 To use in a browser, you have two options:
 
 1. Incorporate the node module into your own browserified project.
-2. Use the browserified versions [`list-dragon.js`](http://openfin.github.io/list-dragon/list-dragon.js) or [`list-dragon.min.js`](http://openfin.github.io/list-dragon/list-dragon.min.js) available on the Github pages CDN.
+2. Use the browserified versions [`object-iterators.js`](http://joneit.github.io/object-iterators/object-iterators.js) or [`object-iterators.min.js`](http://joneit.github.io/object-iterators/object-iterators.min.js) available on the Github pages CDN.
 
 ### Submodules
 

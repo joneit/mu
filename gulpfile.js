@@ -18,11 +18,7 @@ var name     = 'object-iterators',
 gulp.task('lint', lint);
 gulp.task('test', test);
 gulp.task('doc', doc);
-gulp.task('browserify', function(callback) {
-    browserify();
-    browserifyMin();
-    callback();
-});
+gulp.task('enclose', enclose);
 gulp.task('serve', browserSyncLaunchServer);
 
 gulp.task('build', function(callback) {
@@ -31,7 +27,7 @@ gulp.task('build', function(callback) {
         'lint',
         'test',
         'doc',
-        'browserify',
+        'enclose',
         callback);
 });
 
@@ -62,36 +58,24 @@ function test(cb) {
     return gulp.src(testDir + 'index.js')
         .pipe($$.mocha({reporter: 'spec'}));
 }
-
-function browserify() {
-    return gulp.src(srcDir + 'browserify_root.js')
-        .pipe($$.browserify({
-            //insertGlobals : true,
-            debug: true
-        }))
-        //.pipe($$.sourcemaps.init({loadMaps: true}))
-        // Add transformation tasks to the pipeline here:
-
-        .on('error', $$.util.log)
-
-        .pipe($$.rename(name + '.js'))
-        .pipe(gulp.dest(buildDir)); // outputs to ./build/list-dragon.js for githup.io publish
-}
-
-function browserifyMin() {
-    return gulp.src(srcDir + 'browserify_root.js')
-        .pipe($$.browserify())
-        .pipe($$.uglify())
-        .pipe($$.rename(name + '.min.js'))
-        .pipe(gulp.dest(buildDir)); // outputs to ./build/list-dragon.min.js for githup.io publish
-}
-
 function doc(cb) {
     exec(path.resolve('jsdoc.sh'), function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
     });
+}
+
+function enclose() {
+    return gulp.src(srcDir + 'index.js')
+        .pipe($$.replace('module.exports', 'window._'))
+
+        .pipe($$.rename(name + '.js'))
+        .pipe(gulp.dest(buildDir))
+
+        .pipe($$.uglify())
+        .pipe($$.rename(name + '.min.js'))
+        .pipe(gulp.dest(buildDir))
 }
 
 function browserSyncLaunchServer() {

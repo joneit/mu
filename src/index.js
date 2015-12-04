@@ -4,9 +4,8 @@
  * The methods below operate on objects (but not arrays) similarly
  * to Underscore (http://underscorejs.org/#collections).
  *
- * Recommended usage:
- *
- *    var _ = require('object-iterators');
+ * For more information:
+ * https://github.com/joneit/object-iterators
  */
 
 'use strict';
