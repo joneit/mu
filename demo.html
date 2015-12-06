@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>object-iterators demo</title>
+    <style>
+        body { font-family: arial }
+        li.true::before { color: green; content: '\2713\A0' }
+        li.false::before { color: red; content: '\2717\A0' }
+    </style>
+    <script src="object-iterators.js"></script>
+    <script>
+window.onload = function() {
+
+    var obj = {
+        id: 30,
+        name: 'Jack',
+        gender: 'male'
+    };
+
+    var wrapped = _(obj);
+    it('returns wrapped object', wrapped.each(
+        function(value, key) {
+            it(key, value, key === 'id' ? 30 : key === 'name' ? 'Jack' : key === 'gender' ? 'male' : 'undefined');
+        }),
+        wrapped
+    );
+
+    it('maps correctly', wrapped.map(
+        function(value, key) { return { id: 50, name: 'Jill', gender: 'female' }[key]; }),
+        [50, 'Jill', 'female'],
+        false
+    );
+
+    it('filters correctly', wrapped.filter(function(value, key) { return typeof value === 'number'; }), [30], false);
+
+    it('reduces correctly', wrapped.reduce(function(memo, value, key) { return memo + (parseInt(value) || 0); }, 100), 130);
+
+    it('finds included member', wrapped.find(function(value, key) { return value === 'Jack'; }), 'Jack');
+
+    it('does not find excluded member', wrapped.find(function(value, key) { return value === 'Jill'; }), undefined);
+
+    /**
+     * @param {sring} label
+     * @param {*} value
+     * @param {*} expectedValue
+     * @param {undefined|boolean} [deep]
+     * * Omitted (`undefined`) means `===`
+     * * `true` means ordered match
+     * * `false` means unordered match
+     */
+    function it(label, value, expectedValue, deep) {
+        var li = document.createElement('li');
+        if (deep === undefined) {
+            li.className = (value === expectedValue);
+        } else {
+            if (typeof value === 'object' && typeof expectedValue === 'object') {
+                equal = Object.keys(value).length === Object.keys(expectedValue).length;
+                if (equal) {
+                    for (var key in value) {
+                        equal = equal && key in expectedValue && value[key] === expectedValue[key];
+                        if (!equal) {
+                            break;
+                        }
+                    }
+                }
+            } else if (value instanceof Array && typeof expectedValue instanceof Array) {
+                equal = value.length === expectedValue.length;
+                if (equal) {
+                    for (var i = 0; i < value.length; ++i) {
+                        if (deep === true) {
+                            equal = equal && value[i] === expectedValue[i];
+                        } else {
+                            equal = equal && expectedValue[i].indexOf(value[i]) >= 0;
+                        }
+                        if (!equal) {
+                            break;
+                        }
+                    }
+                }
+            } else {
+                equal = false;
+            }
+            li.className = equal;
+        }
+        li.innerHTML = label;
+        document.getElementsByTagName('ol')[0].appendChild(li);
+    }
+
+}
+    </script>
+</head>
+<body>
+    <ol></ol>
+</body>
+</html>
