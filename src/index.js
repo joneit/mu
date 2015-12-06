@@ -60,27 +60,69 @@ Wrapper.prototype = {
      */
     each: function (iteratee, context) {
         var o = this.o;
-        context = context || o;
         Object.keys(o).forEach(function (key) {
-            iteratee.call(context, o[key], key, o);
-        });
+            iteratee.call(this, o[key], key, o);
+        }, context || o);
         return this;
     },
 
     /**
-     * @desc Mimics Underscore's [find](http://underscorejs.org/#find) method: Look through each member of the wrapped object, returning the first one that passes a truth test (predicate), or `undefined` if no value passes the test. The function returns the value of the first acceptable member, and doesn't necessarily traverse the entire object.
+     * @desc Mimics Underscore's [find](http://underscorejs.org/#find) method: Look through each member of the wrapped object, returning the first one that passes a truth test (`predicate`), or `undefined` if no value passes the test. The function returns the value of the first acceptable member, and doesn't necessarily traverse the entire object.
      * @param {function} predicate - For each member of the wrapped object, this function is called with three arguments: `(value, key, object)`. The return value of this function should be truthy if the member passes the test and falsy otherwise.
      * @param {object} [context] - If given, `predicate` is bound to this object. In other words, this object becomes the `this` value in the calls to `predicate`. (Otherwise, the `this` value will be the unwrapped object.)
-     * @return {*} The found property's value.
+     * @return {*} The found property's value, or undefined if not found.
      * @memberOf Wrapper.prototype
      */
     find: function (predicate, context) {
         var o = this.o;
-        context = context || o;
-        var result = Object.keys(o).find(function (key) {
-            return predicate.call(context, o[key], key, o);
-        });
-        return result === undefined ? undefined : o[result];
+        var result;
+        if (o) {
+            result = Object.keys(o).find(function (key) {
+                return predicate.call(this, o[key], key, o);
+            }, context || o);
+            if (result !== undefined) {
+                result = o[result];
+            }
+        }
+        return result;
+    },
+
+    /**
+     * @desc Mimics Underscore's [filter](http://underscorejs.org/#filter) method: Look through each member of the wrapped object, returning the values of all members that pass a truth test (`predicate`), or empty array if no value passes the test. The function always traverses the entire object.
+     * @param {function} predicate - For each member of the wrapped object, this function is called with three arguments: `(value, key, object)`. The return value of this function should be truthy if the member passes the test and falsy otherwise.
+     * @param {object} [context] - If given, `predicate` is bound to this object. In other words, this object becomes the `this` value in the calls to `predicate`. (Otherwise, the `this` value will be the unwrapped object.)
+     * @return {*} An array containing the filtered values.
+     * @memberOf Wrapper.prototype
+     */
+    filter: function (predicate, context) {
+        var o = this.o;
+        var result = [];
+        if (o) {
+            Object.keys(o).forEach(function (key) {
+                if (predicate.call(this, o[key], key, o)) {
+                    result.push(o[key]);
+                }
+            }, context || o);
+        }
+        return result;
+    },
+
+    /**
+     * @desc Mimics Underscore's [map](http://underscorejs.org/#map) method: Produces a new array of values by mapping each value in list through a transformation function (`iteratee`). The function always traverses the entire object.
+     * @param {function} iteratee - For each member of the wrapped object, this function is called with three arguments: `(value, key, object)`. The return value of this function is concatenated to the end of the new array.
+     * @param {object} [context] - If given, `iteratee` is bound to this object. In other words, this object becomes the `this` value in the calls to `predicate`. (Otherwise, the `this` value will be the unwrapped object.)
+     * @return {*} An array containing the filtered values.
+     * @memberOf Wrapper.prototype
+     */
+    map: function (iteratee, context) {
+        var o = this.o;
+        var result = [];
+        if (o) {
+            Object.keys(o).forEach(function (key) {
+                result.push(iteratee.call(this, o[key], key, o));
+            }, context || o);
+        }
+        return result;
     },
 
     /**
@@ -93,10 +135,11 @@ Wrapper.prototype = {
      */
     reduce: function (iteratee, memo, context) {
         var o = this.o;
-        context = context || o;
-        Object.keys(o).forEach(function (key, idx) {
-            memo = (!idx && memo === undefined) ? o[key] : iteratee.call(context, memo, o[key], key, o);
-        });
+        if (o) {
+            Object.keys(o).forEach(function (key, idx) {
+                memo = (!idx && memo === undefined) ? o[key] : iteratee(memo, o[key], key, o);
+            }, context || o);
+        }
         return memo;
     },
 
@@ -135,5 +178,29 @@ Wrapper.prototype = {
         return this.chaining ? this : o;
     }
 };
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+if (!Array.prototype.find) {
+    Array.prototype.find = function (predicate) { // eslint-disable-line no-extend-native
+        if (this === null) {
+            throw new TypeError('Array.prototype.find called on null or undefined');
+        }
+        if (typeof predicate !== 'function') {
+            throw new TypeError('predicate must be a function');
+        }
+        var list = Object(this);
+        var length = list.length >>> 0;
+        var thisArg = arguments[1];
+        var value;
+
+        for (var i = 0; i < length; i++) {
+            value = list[i];
+            if (predicate.call(thisArg, value, i, list)) {
+                return value;
+            }
+        }
+        return undefined;
+    };
+}
 
 module.exports = Wrapper;
