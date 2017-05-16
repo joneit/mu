@@ -55,6 +55,8 @@ A demo can be found [here](http://joneit.github.io/object-iterators/demo.html).
 Or see the Underscore docs:
 
 * [each](http://underscorejs.org/#each)
+* [map](http://underscorejs.org/#map)
+* [filter](http://underscorejs.org/#filter)
 * [find](http://underscorejs.org/#find)
 * [reduce](http://underscorejs.org/#reduce)
 * [extend](http://underscorejs.org/#extend)
